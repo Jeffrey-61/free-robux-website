@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Free Robux!</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center;background:#f3f6fb}
+.card{background:#fff;padding:22px;border-radius:12px;box-shadow:0 8px 24px rgba(20,40,80,0.08);width:320px;text-align:center}
+h1{margin:0 0 14px;font-size:20px}
+label{display:block;text-align:left;margin:12px 0 6px;font-size:13px;color:#333}
+select,input{width:100%;padding:10px;border:1px solid #d7dfe9;border-radius:8px;font-size:14px}
+button{margin-top:14px;width:100%;padding:10px;border:0;border-radius:8px;background:#0066ff;color:#fff;font-weight:600;cursor:pointer}
+#message{margin-top:14px;font-size:14px;color:#1f2937}
+.progress{height:10px;background:#eef3ff;border-radius:6px;overflow:hidden;margin-top:12px;display:none}
+.progress .bar{height:100%;width:0;background:#4f46e5;transition:width .18s}
+.small{font-size:12px;color:#6b7280;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card">
+	<h1>Free Robux!</h1>
+	<form id="prankForm" onsubmit="return false;">
+		<label for="amount">Select amount</label>
+		<select id="amount">
+			<option value="10">10 Robux</option>
+			<option value="50">50 Robux</option>
+			<option value="100">100 Robux</option>
+			<option value="500">500 Robux</option>
+			<option value="1000">1,000 Robux</option>
+			<option value="5000">5,000 Robux</option>
+		</select>
+
+		<label for="username">Username</label>
+		<input id="username" type="text" placeholder="Enter your Roblox username" autocomplete="off" />
+
+		<button id="generate" type="button">Generate</button>
+	</form>
+
+	<div id="message" class="small" aria-live="polite"></div>
+	<div class="progress" id="progress"><div class="bar"></div></div>
+</div>
+
+<script>
+(function(){
+	const btn = document.getElementById('generate');
+	const msg = document.getElementById('message');
+	const progress = document.getElementById('progress');
+	const bar = progress.querySelector('.bar');
+
+	function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+	btn.addEventListener('click', function(){
+		const amount = document.getElementById('amount').value;
+		const username = document.getElementById('username').value.trim();
+
+		// show clear disclaimer immediately
+		msg.innerHTML = "Generating Robux"
+		progress.style.display = 'block';
+		bar.style.width = '0%';
+
+		// 
+		let p = 0;
+		const t = setInterval(()=>{
+			p += Math.floor(Math.random()*18)+8; if(p>100) p=100;
+			bar.style.width = p + '%';
+			if(p >= 100){
+				clearInterval(t);
+				setTimeout(()=>{
+					// final message; username is used only for display and not stored/transmitted
+					const userLine = username ? "<br>Account: " + escapeHtml(username) : "";
+					msg.innerHTML = "Note: robux will appear in your account after some weeks ("+escapeHtml(amount)+" Robux)"+userLine;
+					progress.style.display = 'none';
+				}, 400);
+			}
+		}, 220);
+	});
+})();
+</script>
+</body>
+</html>
